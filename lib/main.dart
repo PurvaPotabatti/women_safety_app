@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'screens/timer/home_screen.dart'; // Timer module
 
 void main() {
   runApp(const MyApp());
@@ -11,12 +12,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
+      title: 'Women Safety App',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Women Safety App Home'),
     );
   }
 }
@@ -44,7 +46,6 @@ class _MyHomePageState extends State<MyHomePage> {
     bool serviceEnabled;
     LocationPermission permission;
 
-    // Check if location services are enabled
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       setState(() {
@@ -53,7 +54,6 @@ class _MyHomePageState extends State<MyHomePage> {
       return;
     }
 
-    // Check location permission
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -72,7 +72,6 @@ class _MyHomePageState extends State<MyHomePage> {
       return;
     }
 
-    // Get current position
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
 
@@ -102,6 +101,19 @@ class _MyHomePageState extends State<MyHomePage> {
               _location,
               textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 30),
+
+            // Button to launch Timer Module
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const HomeScreen()), // Timer Module
+                );
+              },
+              style: ElevatedButton.styleFrom(padding: const EdgeInsets.all(16)),
+              child: const Text("Start Timer", style: TextStyle(fontSize: 18)),
             ),
           ],
         ),
