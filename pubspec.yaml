@@ -17,8 +17,16 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  geolocator: ^13.0.4              # Latest resolvable
+  permission_handler: ^11.4.0
+  #mailer: ^6.0.0
+  # Latest resolvable
+  flutter_sms: ^2.3.3
+  url_launcher: ^6.1.14
+  #background_sms: ^0.0.4
+  #telephony: ^0.2.0
   # Cupertino Icons for iOS-style icons
+  #flutter_background_messenger: ^0.0.2
   cupertino_icons: ^1.0.8
 
 # Dev dependencies for testing and linting
