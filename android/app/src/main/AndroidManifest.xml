@@ -3,6 +3,11 @@
         android:label="women_safety_app"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <service
+            android:name="com.google.android.gms.location.FusedLocationProviderService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="false"/>
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -42,4 +47,15 @@
             <data android:mimeType="text/plain"/>
         </intent>
     </queries>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+
+    <uses-feature android:name="android.hardware.telephony" android:required="false"/>
 </manifest>
