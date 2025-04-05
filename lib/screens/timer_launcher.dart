@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'timer/home_screen.dart'; // Adjusted based on your structure
+import 'timer/timer_screen.dart'; // Adjusted based on your structure
 
 class TimerLauncher extends StatelessWidget {
   const TimerLauncher({super.key});
