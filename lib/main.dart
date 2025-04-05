@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
 
-// Screens
 import 'screens/home_screen.dart'; // Main App Home
-import 'screens/login_screen.dart'; // You should create this screen
+//import 'screens/login_screen.dart'; // You should create this screen
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,10 +20,10 @@ Future<void> _requestPermissions() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  Future<bool> _isUserLoggedIn() async {
+  /*Future<bool> _isUserLoggedIn() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getBool('is_logged_in') ?? false;
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +34,9 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: FutureBuilder<bool>(
+      home: HomeScreen(),
+
+      /*home: FutureBuilder<bool>(
         future: _isUserLoggedIn(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -43,10 +44,10 @@ class MyApp extends StatelessWidget {
               body: Center(child: CircularProgressIndicator()),
             );
           } else {
-            return snapshot.data == true ? const HomeScreen() : const LoginScreen();
+            //return snapshot.data == true ? const HomeScreen() : const LoginScreen();
           }
         },
-      ),
+      ),*/
     );
   }
 }
