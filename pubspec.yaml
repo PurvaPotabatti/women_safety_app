@@ -17,24 +17,21 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
   geolocator: ^13.0.4              # Latest resolvable
   permission_handler: ^11.4.0
-  #mailer: ^6.0.0
-  # Latest resolvable
   flutter_sms: ^2.3.3
   url_launcher: ^6.1.14
-  #background_sms: ^0.0.4
-  #telephony: ^0.2.0
-  # Cupertino Icons for iOS-style icons
-  #flutter_background_messenger: ^0.0.2
   cupertino_icons: ^1.0.8
 
   geocoding: ^3.0.0
   location: ^8.0.0
   http: ^1.3.0                 # For API calls to LocationIQ
   flutter_local_notifications: ^19.0.0
-  #url_launcher: ^6.1.11
-  #geolocator: ^13.0.3
+  url_launcher: ^6.1.11
+  geolocator: ^13.0.3
+
+  
 
 # Dev dependencies for testing and linting
 dev_dependencies:
@@ -46,6 +43,16 @@ dev_dependencies:
 flutter:
   # Ensures that Material Icons are available
   uses-material-design: true
+
+  assets:
+      - assets/damini.png
+      - assets/nirbhaya.png
+      - assets/tejashwini.png
+      - assets/family.png
+      - assets/friends.png
+      - assets/colleagues.png
+      - assets/gps.png
+
 
   # Add assets for images, icons, etc.
   #assets:
