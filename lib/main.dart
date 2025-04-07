@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:ui';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart'; // Auto-generated file after Firebase setup
 
 // Community Feature Pages
 import 'community_page/community_contact.dart';
@@ -12,7 +14,12 @@ import 'community_page/tejashwini_page.dart';
 // Timer Module
 import 'screens/timer/home_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(const MyApp());
 }
 
@@ -113,7 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const HomeScreen()), // Timer Module
+                    MaterialPageRoute(builder: (_) => const HomeScreen()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -163,7 +170,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-// 👥 Community Screen Integrated Below
 class CommunityHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -176,7 +182,6 @@ class CommunityHomeScreen extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
         child: Column(
           children: [
-            // Top circle icons
             Padding(
               padding: EdgeInsets.only(bottom: 20.0),
               child: Row(
@@ -243,12 +248,10 @@ class CommunityHomeScreen extends StatelessWidget {
     );
   }
 
-  Widget buildCustomButton(
-      BuildContext context, {
-        required String imagePath,
+  Widget buildCustomButton(BuildContext context,
+      {required String imagePath,
         required String label,
-        required VoidCallback onTap,
-      }) {
+        required VoidCallback onTap}) {
     return GestureDetector(
       onTap: onTap,
       child: ClipRRect(
