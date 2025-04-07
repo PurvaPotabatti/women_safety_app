@@ -8,22 +8,8 @@ import 'damini_page.dart';
 import 'nirbhaya_page.dart';
 import 'tejashwini_page.dart';
 
-void main() {
-  runApp(MyApp());
-}
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Women Safety App',
-      theme: ThemeData(primarySwatch: Colors.pink),
-      home: HomeScreen(),
-    );
-  }
-}
-
-class HomeScreen extends StatelessWidget {
+class CommunityHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

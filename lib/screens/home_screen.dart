@@ -4,7 +4,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:women_safety_app/screens/timer/timer_screen.dart' as timer_screen;
 import 'package:women_safety_app/screens/priority_message/priority_message_screen.dart';
-
+import 'package:women_safety_app/screens/community_page/community_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   final List<String> emergencyContacts = [
@@ -97,6 +97,15 @@ class HomeScreen extends StatelessWidget {
             ),
           );
         }
+        else if (title == "Community") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const CommunityHomeScreen(),
+            ),
+          );
+        }
+
         else {
           // You can handle other tabs here if needed
           ScaffoldMessenger.of(context).showSnackBar(
