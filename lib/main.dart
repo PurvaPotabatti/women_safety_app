@@ -17,7 +17,7 @@ void main() async {
 }
 
 /// Handles background notification
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+/*Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await saveNotificationToFirebase(message);
 }
@@ -32,20 +32,8 @@ Future<void> saveNotificationToFirebase(RemoteMessage message) async {
     });
   }
 }
+*/
 
-class MyApp extends StatefulWidget {
-
-import 'package:permission_handler/permission_handler.dart';
-//import 'package:shared_preferences/shared_preferences.dart';
-
-import 'screens/home_screen.dart'; // Main App Home
-//import 'screens/login_screen.dart'; // You should create this screen
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await _requestPermissions(); // Ask permissions
-  runApp(const MyApp());
-}
 
 Future<void> _requestPermissions() async {
   await Permission.location.request();
@@ -53,36 +41,12 @@ Future<void> _requestPermissions() async {
 }
 
 class MyApp extends StatelessWidget {
-
   const MyApp({super.key});
 
   /*Future<bool> _isUserLoggedIn() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getBool('is_logged_in') ?? false;
   }*/
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    super.initState();
-
-    // Foreground listener
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      await saveNotificationToFirebase(message);
-    });
-
-    // When app is opened from background via notification
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
-      await saveNotificationToFirebase(message);
-    });
-
-    // Request permission
-    FirebaseMessaging.instance.requestPermission();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,6 +74,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
+
 
 
 class MyHomePage extends StatefulWidget {

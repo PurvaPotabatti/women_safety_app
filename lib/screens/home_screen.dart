@@ -105,7 +105,14 @@ class HomeScreen extends StatelessWidget {
             ),
           );
         }
-
+        else if (title == "Safety Tips") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const CommunityHomeScreen(),
+            ),
+          );
+        }
         else {
           // You can handle other tabs here if needed
           ScaffoldMessenger.of(context).showSnackBar(
