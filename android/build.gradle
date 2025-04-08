@@ -1,5 +1,6 @@
 buildscript {
     repositories {
+
         google()              // ✅ Required for Firebase and Play Services
         mavenCentral()
     }
@@ -9,6 +10,14 @@ buildscript {
 
         // ✅ You can upgrade later if needed
         classpath 'com.google.gms:google-services:4.4.0' // ✅ Firebase plugin
+
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:8.1.1"  // Updated for Gradle 8.3
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.22"  // Kotlin version that works with AGP 8.1.1
+
     }
 }
 
@@ -20,10 +29,9 @@ allprojects {
 }
 
 rootProject.buildDir = "../build"
+
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
-}
-subprojects {
     project.evaluationDependsOn(":app")
 }
 
