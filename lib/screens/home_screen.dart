@@ -4,6 +4,10 @@ import 'package:women_safety_app/screens/timer/timer_screen.dart' as timer_scree
 import 'package:women_safety_app/screens/priority_message/priority_message_screen.dart';
 import 'package:women_safety_app/screens/contacts/emergency_contacts.dart';
 import 'package:women_safety_app/services/sos_service.dart';
+import 'package:women_safety_app/screens/community_page/communtiy_screen.dart';
+import 'package:women_safety_app/screens/safety_tips/safety_tips.dart';
+
+
 
 class HomeScreen extends StatelessWidget {
   final String userId;
@@ -96,7 +100,27 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
           );
-        } else {
+        } 
+        else if (title == "Community") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>  CommunityHomeScreen(),
+            ),
+          );
+        }
+        else if (title == "Safety Tips") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SafetyTipsScreen(),
+            ),
+          );
+        }
+
+
+        else {
+          // You can handle other tabs here if needed
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('$title page not implemented yet')),
           );

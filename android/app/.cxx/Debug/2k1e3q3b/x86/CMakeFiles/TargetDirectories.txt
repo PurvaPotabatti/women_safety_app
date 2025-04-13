@@ -1,0 +1,2 @@
+E:/untitled/women_safety_app/android/app/.cxx/Debug/2k1e3q3b/x86/CMakeFiles/edit_cache.dir
+E:/untitled/women_safety_app/android/app/.cxx/Debug/2k1e3q3b/x86/CMakeFiles/rebuild_cache.dir
