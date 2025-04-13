@@ -7,6 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'secret.dart';
 import 'notification_screen.dart'; // Import notification panel
 import 'package:url_launcher/url_launcher.dart';
+import 'package:women_safety_app/services/sos_service.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -126,18 +127,19 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void _sendSOSAlert() {
-    String googleMapsLink = "https://www.google.com/maps?q=$_latitude,$_longitude";
-    String message = "User is in danger! Tap to view location:\n$googleMapsLink";
+  void _sendSOSAlert() async {
+    await sendSOSAlert();
 
-    _sendNotification("🚨 SOS Alert", message);
+    _sendNotification("🚨 SOS Alert", "SOS has been triggered and sent successfully.");
 
     setState(() {
-      _notifications.insert(0, {"title": "🚨 SOS Alert", "message": message});
+      _notifications.insert(0, {
+        "title": "🚨 SOS Alert",
+        "message": "SOS has been triggered and sent successfully."
+      });
     });
-
-    print("🚨 SOS Triggered! Location: $_latitude, $_longitude 🚨");
   }
+
 
 
 

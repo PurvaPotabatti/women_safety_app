@@ -19,20 +19,29 @@ dependencies:
     sdk: flutter
   geolocator: ^13.0.4              # Latest resolvable
   permission_handler: ^11.4.0
-  #mailer: ^6.0.0
-  # Latest resolvable
   flutter_sms: ^2.3.3
-  url_launcher: ^6.1.14
-  #background_sms: ^0.0.4
   #telephony: ^0.2.0
-  # Cupertino Icons for iOS-style icons
-  #flutter_background_messenger: ^0.0.2
+  url_launcher: ^6.1.14
   cupertino_icons: ^1.0.8
+  firebase_core: ^3.13.0
+  firebase_messaging: ^15.2.5
+  flutter_local_notifications: ^19.0.0
+  cloud_firestore: ^5.6.6
+  google_sign_in: ^6.1.6
+  flutter_contacts: ^1.1.9+2
+  async: 2.12.0
+
+  permission_handler_android: 12.1.0  # Updated version
+  fake_async: 1.3.2 # Updated version
+  leak_tracker: 10.0.8  # Updated version
+  material_color_utilities: ^0.11.1  # Updated version
+  vm_service: 14.3.1  # Updated version
 
   geocoding: ^3.0.0
   location: ^8.0.0
   http: ^1.3.0                 # For API calls to LocationIQ
-  flutter_local_notifications: ^19.0.0
+  firebase_auth: ^5.5.2
+  #flutter_local_notifications: ^19.0.0
   #url_launcher: ^6.1.11
   #geolocator: ^13.0.3
 
@@ -42,11 +51,14 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^5.0.0
 
+#dependency_overrides:
+  #firebase_auth_platform_interface: ^7.0.5
 # Flutter-specific configuration
 flutter:
   # Ensures that Material Icons are available
   uses-material-design: true
-
+  #assets:
+    #- assets/google.png
   # Add assets for images, icons, etc.
   #assets:
    # - lib/resources/assets/

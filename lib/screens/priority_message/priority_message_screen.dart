@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class PriorityMessageScreen extends StatefulWidget {
   const PriorityMessageScreen({super.key});
@@ -14,8 +16,56 @@ class _PriorityMessageScreenState extends State<PriorityMessageScreen> {
   String _priority = 'low';
   TextEditingController _messageController = TextEditingController();
 
-  final List<String> emergencyContacts = ['9022302137', '9225831363'];
-  final List<String> communityContacts = ['7020117583', '8788113755'];
+  List<String> emergencyContacts = [];
+  List<String> communityContacts = []; // Will be filled later if needed
+
+  final userId = FirebaseAuth.instance.currentUser?.uid;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchContacts();
+  }
+
+  Future<void> _fetchContacts() async {
+    try {
+      if (userId == null) return;
+
+      // Fetch Emergency Contacts from Firestore
+      QuerySnapshot emergencySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('contacts')
+          .get();
+
+      List<String> emergencyList = emergencySnapshot.docs
+          .map((doc) => doc['number'] as String)
+          .toList();
+
+      setState(() {
+        emergencyContacts = emergencyList;
+      });
+
+      // Uncomment this block once community contact logic is implemented
+      /*
+      QuerySnapshot communitySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('community_contacts')
+          .get();
+
+      List<String> communityList = communitySnapshot.docs
+          .map((doc) => doc['phone'] as String)
+          .toList();
+
+      setState(() {
+        communityContacts = communityList;
+      });
+      */
+    } catch (e) {
+      print("Error fetching contacts: $e");
+    }
+  }
 
   Future<void> _sendPriorityMessage() async {
     var status = await Permission.location.request();
@@ -29,9 +79,9 @@ class _PriorityMessageScreenState extends State<PriorityMessageScreen> {
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
       );
+
       String googleMapsUrl =
           "https://www.google.com/maps/search/?api=1&query=${position.latitude},${position.longitude}";
-
       String defaultMessage = "🚨 Priority Alert! My location: $googleMapsUrl";
       String customMessage = _messageController.text.trim();
 
@@ -39,8 +89,15 @@ class _PriorityMessageScreenState extends State<PriorityMessageScreen> {
           "${_priority.toUpperCase()} PRIORITY ALERT:\n${customMessage.isNotEmpty ? customMessage + "\n" : ""}$defaultMessage";
 
       List<String> recipients = [...emergencyContacts];
+
       if (_priority == 'high') {
+        // Add community contacts to recipient list (if implemented)
         recipients.addAll(communityContacts);
+      }
+
+      if (recipients.isEmpty) {
+        print("No contacts available to send SMS");
+        return;
       }
 
       String uri =

@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:women_safety_app/screens/timer/timer_screen.dart' as timer_screen;
 import 'package:women_safety_app/screens/priority_message/priority_message_screen.dart';
-
+import 'package:women_safety_app/screens/contacts/emergency_contacts.dart';
+import 'package:women_safety_app/services/sos_service.dart';
 
 class HomeScreen extends StatelessWidget {
-  final List<String> emergencyContacts = [
-    '9225831363',
-    '9022302137',
-    '7020117583',
-    '8788113755'
-    // Add more contacts as needed
-  ];
+  final String userId;
+
+  HomeScreen({Key? key, required this.userId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -37,23 +32,19 @@ class HomeScreen extends StatelessWidget {
               crossAxisSpacing: 20,
               mainAxisSpacing: 20,
               children: [
-                _buildNavButton(
-                    context, "Emergency Contacts", Icons.contact_phone, Colors.blue),
-                _buildNavButton(
-                    context, "Community", Icons.people, Colors.green),
-                _buildNavButton(
-                    context, "Timer", Icons.timer, Colors.orange),
-                _buildNavButton(
-                    context, "Safety Tips", Icons.security, Colors.purple),
-                _buildNavButton(context, "Priority Messaging",
-                    Icons.priority_high, Colors.red),
+                _buildNavButton(context, "Emergency Contacts", Icons.contact_phone, Colors.blue),
+                _buildNavButton(context, "Community", Icons.people, Colors.green),
+                _buildNavButton(context, "Timer", Icons.timer, Colors.orange),
+                _buildNavButton(context, "Safety Tips", Icons.security, Colors.purple),
+                _buildNavButton(context, "Priority Messaging", Icons.priority_high, Colors.red),
               ],
             ),
           ),
           SizedBox(height: 30),
           FloatingActionButton.extended(
             onPressed: () async {
-              await _sendSOS();
+              String userId = FirebaseAuth.instance.currentUser?.uid ?? "";
+              await sendSOSAlert(); // ✅ Uses the new sos_service.dart
             },
             label: Text(
               "SOS ALERT",
@@ -88,17 +79,24 @@ class HomeScreen extends StatelessWidget {
               builder: (context) => const timer_screen.HomeScreen(),
             ),
           );
-        }
-        else if (title == "Priority Messaging") {
+        } else if (title == "Priority Messaging") {
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => const PriorityMessageScreen(),
             ),
           );
-        }
-        else {
-          // You can handle other tabs here if needed
+        } else if (title == "Emergency Contacts") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => EmergencyContactsPage(
+                userId: userId,
+                isNewUser: false,
+              ),
+            ),
+          );
+        } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('$title page not implemented yet')),
           );
@@ -118,43 +116,5 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
     );
-  }
-
-
-  Future<void> _sendSOS() async {
-    // Request location permission
-    var status = await Permission.location.request();
-
-    if (status.isGranted) {
-      try {
-        // Get current location
-        Position position = await Geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.high);
-        String googleMapsUrl =
-            "https://www.google.com/maps/search/?api=1&query=${position.latitude},${position.longitude}";
-
-        // Prepare SOS message
-        String message =
-            "🚨 I'm in danger! Please help. My location: $googleMapsUrl";
-
-        // Combine recipients into a single string separated by commas
-        String recipients = emergencyContacts.join(',');
-
-        // Encode message and recipients for the SMS URI
-        String uri =
-            'sms:$recipients?body=${Uri.encodeComponent(message)}';
-
-        // Launch the SMS app
-        if (await canLaunch(uri)) {
-          await launch(uri);
-        } else {
-          print("Could not launch SMS app");
-        }
-      } catch (e) {
-        print("Error getting location: $e");
-      }
-    } else {
-      print("Location permission not granted");
-    }
   }
 }

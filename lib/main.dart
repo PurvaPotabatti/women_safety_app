@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
-//import 'package:shared_preferences/shared_preferences.dart';
-
-import 'screens/home_screen.dart'; // Main App Home
-//import 'screens/login_screen.dart'; // You should create this screen
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'screens/login/choose_login_screen.dart'; // renamed & moved screen
+import 'package:women_safety_app/screens/home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await _requestPermissions(); // Ask permissions
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  await _requestPermissions(); // Ask for location & SMS permissions
   runApp(const MyApp());
 }
 
@@ -20,11 +23,6 @@ Future<void> _requestPermissions() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  /*Future<bool> _isUserLoggedIn() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getBool('is_logged_in') ?? false;
-  }*/
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -34,20 +32,8 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
-
-      /*home: FutureBuilder<bool>(
-        future: _isUserLoggedIn(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Scaffold(
-              body: Center(child: CircularProgressIndicator()),
-            );
-          } else {
-            //return snapshot.data == true ? const HomeScreen() : const LoginScreen();
-          }
-        },
-      ),*/
+      home: ChooseLoginScreen(),
+      // 👈 Set Tina's UI here
     );
   }
 }
