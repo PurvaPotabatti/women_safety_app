@@ -10,31 +10,31 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-  # UI & Essentials
-  cupertino_icons: ^1.0.8
-
-
-  cloud_firestore: ^5.6.6
-  #firebase_core: ^2.24.2
-
-  firebase_core: ^3.13.0
-  firebase_auth: ^5.5.2
-
-  flutter_sms: ^2.3.3
-  url_launcher: ^6.1.14
-  flutter_contacts: ^1.1.6
+  geolocator: ^13.0.4              # Latest resolvable
   permission_handler: ^11.4.0
+  flutter_sms: ^2.3.3
+  #telephony: ^0.2.0
+  url_launcher: ^6.1.14
+  cupertino_icons: ^1.0.8
+  firebase_core: ^3.13.0
+  firebase_messaging: ^15.2.5
+  flutter_local_notifications: ^19.0.0
+  cloud_firestore: ^5.6.6
+  google_sign_in: ^6.1.6
+  flutter_contacts: ^1.1.9+2
+  async: 2.12.0
 
-  # Location & Map Utilities
-  geolocator: ^13.0.4
+  permission_handler_android: 12.1.0  # Updated version
+  fake_async: 1.3.2 # Updated version
+  leak_tracker: 10.0.8  # Updated version
+  material_color_utilities: ^0.11.1  # Updated version
+  vm_service: 14.3.1  # Updated version
 
   geocoding: ^3.0.0
   location: ^8.0.0
-
-  # Notifications
-  flutter_local_notifications: ^19.0.0
-
+  http: ^1.3.0                 # For API calls to LocationIQ
+  firebase_auth: ^5.5.2
+  #flutter_local_notifications: ^19.0.0
   #url_launcher: ^6.1.11
  # geolocator: ^13.0.3
   firebase_messaging: ^15.2.5
@@ -50,17 +50,9 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^5.0.0
 
-#dependency_overrides:
-#  flutter_sms:
-#    git:
-#      url: https://github.com/aravind972/flutter_sms.git
-flutter_sms:
-  path: flutter_sms/
 
 flutter:
   uses-material-design: true
-
-
 
   assets:
     - assets/damini.png
@@ -70,3 +62,4 @@ flutter:
     - assets/friends.png
     - assets/colleagues.png
     - assets/gps.png
+

@@ -278,7 +278,6 @@
 //   }
 // }
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'dart:async';
@@ -286,9 +285,10 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:geolocator/geolocator.dart';
 import 'secret.dart';
-import 'notification_screen.dart';
+import 'notification_screen.dart'; // Import notification panel
 import 'package:url_launcher/url_launcher.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:women_safety_app/services/sos_service.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -300,19 +300,18 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   double _latitude = 0.0;
   double _longitude = 0.0;
-
   Timer? _timer;
   int _timeLeft = 0;
   bool _isTimerRunning = false;
   bool _isPaused = false;
   bool _notifiedForExtension = false;
 
-  final FlutterLocalNotificationsPlugin _notificationsPlugin =
-  FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin _notificationsPlugin = FlutterLocalNotificationsPlugin();
+  List<Map<String, String>> _notifications = [];
 
-  final TextEditingController _hoursController = TextEditingController();
-  final TextEditingController _minutesController = TextEditingController();
-  final TextEditingController _secondsController = TextEditingController();
+  TextEditingController _hoursController = TextEditingController();
+  TextEditingController _minutesController = TextEditingController();
+  TextEditingController _secondsController = TextEditingController();
 
   @override
   void initState() {
@@ -322,21 +321,19 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _initializeNotifications() {
-    const AndroidInitializationSettings androidSettings =
-    AndroidInitializationSettings('@mipmap/ic_launcher');
-    final InitializationSettings initSettings =
-    InitializationSettings(android: androidSettings);
+    const AndroidInitializationSettings androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    final InitializationSettings initSettings = InitializationSettings(android: androidSettings);
     _notificationsPlugin.initialize(initSettings);
   }
 
   Future<void> _getCurrentLocation() async {
     try {
-      Position position =
-      await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
       setState(() {
         _latitude = position.latitude;
         _longitude = position.longitude;
       });
+
       _fetchLocationDetails();
     } catch (e) {
       print("Error fetching location: $e");
@@ -347,8 +344,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final String apiKey = Secrets.locationIqApiKey;
     try {
       final response = await http.get(
-        Uri.parse(
-            'https://us1.locationiq.com/v1/reverse.php?key=$apiKey&lat=$_latitude&lon=$_longitude&format=json'),
+        Uri.parse('https://us1.locationiq.com/v1/reverse.php?key=$apiKey&lat=$_latitude&lon=$_longitude&format=json'),
       );
 
       if (response.statusCode == 200) {
@@ -405,25 +401,31 @@ class _HomeScreenState extends State<HomeScreen> {
       _timeLeft = 0;
     });
   }
-
   void extendTimer() {
     setState(() {
-      _timeLeft += 600;
+      _timeLeft += 600; // Extends timer by 10 minutes
     });
   }
 
-  void _sendSOSAlert() {
-    String googleMapsLink = "https://www.google.com/maps?q=$_latitude,$_longitude";
-    String message = "User is in danger! Tap to view location:\n$googleMapsLink";
+  void _sendSOSAlert() async {
+    await sendSOSAlert();
 
-    _sendNotification("🚨 SOS Alert", message);
+    _sendNotification("🚨 SOS Alert", "SOS has been triggered and sent successfully.");
 
-    print("🚨 SOS Triggered! Location: $_latitude, $_longitude 🚨");
+    setState(() {
+      _notifications.insert(0, {
+        "title": "🚨 SOS Alert",
+        "message": "SOS has been triggered and sent successfully."
+      });
+    });
   }
 
-  Future<void> _sendNotification(String title, String body) async {
-    await _getCurrentLocation();
 
+
+
+
+
+  Future<void> _sendNotification(String title, String body) async {
     const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
       'channel_id',
       'channel_name',
@@ -431,18 +433,8 @@ class _HomeScreenState extends State<HomeScreen> {
       priority: Priority.high,
     );
 
-    const NotificationDetails notificationDetails =
-    NotificationDetails(android: androidDetails);
-
+    const NotificationDetails notificationDetails = NotificationDetails(android: androidDetails);
     await _notificationsPlugin.show(0, title, body, notificationDetails);
-
-    await FirebaseFirestore.instance.collection('notification').add({
-      'title': title,
-      'body': body,
-      'timestamp': Timestamp.now(),
-      'latitude': _latitude,
-      'longitude': _longitude,
-    });
   }
 
   String _formatTime(int totalSeconds) {
@@ -463,7 +455,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const NotificationScreen()),
+                MaterialPageRoute(builder: (context) => NotificationScreen(notifications: _notifications)),
               );
             },
           ),
@@ -534,19 +526,21 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
 
             const SizedBox(height: 20),
-
+            // Add this GestureDetector for clickable Google Maps link
             GestureDetector(
               onTap: () {
-                String googleMapsLink =
-                    "https://www.google.com/maps?q=$_latitude,$_longitude";
-                launchUrl(Uri.parse(googleMapsLink), mode: LaunchMode.externalApplication);
+                String googleMapsLink = "https://www.google.com/maps?q=$_latitude,$_longitude";
+                Uri googleMapsUri = Uri.parse(googleMapsLink);
+                launchUrl(googleMapsUri, mode: LaunchMode.externalApplication);
               },
-              child: const Text(
+              child: Text(
                 "Open Google Maps",
-                style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
+                style: TextStyle(
+                  color: Colors.blue,
+                  decoration: TextDecoration.underline,
+                ),
               ),
             ),
-
             ElevatedButton(
               onPressed: _sendSOSAlert,
               child: const Text("Trigger SOS"),
